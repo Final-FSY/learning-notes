@@ -53,4 +53,47 @@
 
 ---
 
+## 2026-08-14 · 晚间加餐：从白天干到黑夜
+
+### 🌐 5. 网络诊断实战：GitHub 打不开怎么办
+
+- 症状：github.com 网页间歇性打不开、git 推代码超时。
+- **诊断方法（先测试再下结论）**：
+  1. 查 DNS 解析——`nslookup github.com` 看地址对不对（结果是：解析正常，排除 DNS 污染）
+  2. 直连测试——`curl -sI https://github.com` 超时；测试 5 个 GitHub IP 全部连不上（结论：IP 层被掐，不是电话簿的问题）
+- **解法：SSH-443 通道**（国内用户标准方案）
+  - 生成密钥：`ssh-keygen -t ed25519`
+  - 把公钥加到 GitHub（Settings → SSH keys）
+  - 配置 `~/.ssh/config`：`Host github.com → HostName ssh.github.com → Port 443`
+  - 从此 git 推送走 `ssh.github.com:443`，**完全绕开被墙的网页端口**，稳定如老狗
+- 辅助工具：Watt Toolkit（Windows 一键加速 GitHub）；手机流量临时救急。
+- 学到了：**测试 > 猜测**——改配置前先用 5 分钟定位真凶。
+
+### 📸 6. 图片识别三档方案
+
+- 当前 AI 模型不支持看图 → 搭了三档：
+  1. **tesseract OCR**（快）：`tesseract 图片 -l chi_sim+eng out`，文字截图秒读
+  2. **本地视觉模型**（Ollama qwen3-vl，慢但能看懂图）
+  3. **云端视觉模型**（阿里云百炼，待注册）
+
+### 🧠 7. 记忆搜索索引修复
+
+- 症状：记忆搜索报错“index metadata is missing”，自动暂停。
+- 根因：记忆索引默认用 OpenAI 嵌入模型，没有 key。
+- 解法：改用本地 Ollama 嵌入模型 `qwen3-embedding:0.6b`，`openclaw memory index --force` 重建。
+- 学到了：嵌入模型 = 把文字变成向量的“图书管理员”，负责语义检索。
+
+### 💬 8. 微信渠道上线
+
+- OpenClaw 官方有腾讯微信团队开发的插件（`@tencent-weixin/openclaw-weixin`），扫码登录即用。
+- 微信里的我和网页里的我是**同一个大脑**（长期记忆共享），但对话上下文分开（不同“房间”）。
+
+### 🍊 9. 明日预告：Orange Pi Zero 3 折腾计划
+
+- 给 1.5GB 小机器刷 Armbian 精简版（无桌面）
+- 项目：AdGuard Home 全屋广告拦截（DNS 层拦截，全家生效）+ Syncthing 照片备份
+- 镜像已备好（U 盘 + 电脑双份），明天开干！
+
+---
+
 *持续更新中…*
